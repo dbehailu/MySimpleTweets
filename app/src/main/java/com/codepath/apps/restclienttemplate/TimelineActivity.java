@@ -1,10 +1,16 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -17,12 +23,16 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity  {
 
+    final int REQUEST_CODE = 20;
     TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+    Button button;
+    private SmartFragmentStatePagerAdapter adapterViewPager;
+    private ViewPager vpPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +52,51 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         //set the adapter
         rvTweets.setAdapter(tweetAdapter);
+
         populateTimeline();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.item1:
+                composeMessage();
+                return true;
+//            case R.id.miProfile:
+//                showProfileView();
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void composeMessage(){
+        Toast.makeText(this, "COMPOSING MESSAGE", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        i.putExtra("tweetText", 2);
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // check request code and result code first
+
+        // Use data parameter
+        Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
+
+        tweets.add(0, tweet);
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
+    }
 
     private void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
@@ -63,10 +115,12 @@ public class TimelineActivity extends AppCompatActivity {
                     // convert each object to a Tweet model
                     // add that Tweet model to our data source
 
+
                     // notify adapter that we've added an item
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
+                        // tweet.getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
                         tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -93,5 +147,35 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void onComposeAction(MenuItem item) {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(this, ComposeActivity.class);
+        startActivity(i); // brings up the second activity
+        // put "extras" into the bundle for access in the second activity
+        i.putExtra("username", "foobar");
+        i.putExtra("in_reply_to", "george");
+        i.putExtra("code", 400);
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+//    public void showProfileView(){
+//
+//        Intent i = new Intent(this, ProfileActivity.class);
+//        startActivity(i);
+//
+//    }
+//    public void onSubmit(View v) {
+//        // closes the activity and returns to first screen
+//        this.finish();
+//    }
+
+//    public void onClick(View view) {
+//        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+//        i.putExtra("mode", 2); // pass arbitrary data to launched activity
+//        startActivityForResult(i, REQUEST_CODE);
+//    }
+
+
 
 }

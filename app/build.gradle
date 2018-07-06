@@ -39,10 +39,15 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     // Android Async Http for sending async network requests
     implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation 'org.parceler:parceler-api:1.1.6'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
+    implementation 'com.android.support:design:27.1.0'
     // Room for simple persistence with an ORM
     implementation "android.arch.persistence.room:runtime:1.0.0"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
+
+    implementation 'com.android.support:mediarouter-v7:27.1.0'
 }
