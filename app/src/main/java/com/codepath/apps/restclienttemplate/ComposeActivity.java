@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -21,9 +20,9 @@ public class ComposeActivity extends AppCompatActivity {
 
     TwitterClient client;
     String message; // tweet
-    Button button;
     EditText editText;
-    public static String TWEET_INTENT_KEY = "tweet";
+//    String mCurrentTweetText = "";
+//    public static String TWEET_INTENT_KEY = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +32,9 @@ public class ComposeActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.et_simple);
     }
 
-
-
-    // onSubmit in guide
     public void onTweet(View view) {
-        message= editText.getText().toString();
+        message = editText.getText().toString();
+//        message = mCurrentTweetText;
         if (message == null || message.isEmpty()) {
             Log.w("onTweet", "invalid tweet");
             return;
@@ -46,16 +43,20 @@ public class ComposeActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
+//                super.onSuccess(statusCode, headers, response);
 
                 // prepare data intent
                 Log.d("DEBUG", "SENT TWEET");
 
                 try {
                     Tweet t = Tweet.fromJSON(response);
-                    Intent data = new Intent();
-                    data.putExtra("tweet", Parcels.wrap(t));
-                    setResult(RESULT_OK, data);
+                    Log.d("TweetDebug", "t = " + t + "message = " + message);
+                    Intent intent = new Intent();
+                    intent.putExtra("tweet", Parcels.wrap(t));
+
+                    setResult(RESULT_OK, intent);
+//                    startActivityForResult(intent, RESULT_OK);
+
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();

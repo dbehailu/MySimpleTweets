@@ -8,5 +8,11 @@
     <string name="tweet">Tweet</string>
     <string name="compose">Compose</string>
     <string name="profile">Profile</string>
+    <string name="_5">5</string>
+    <string name="banner">Banner</string>
+    <string name="name">Name</string>
+    <string name="tagline">Tagline</string>
+    <string name="following">FOLLOWING</string>
+    <string name="followers">FOLLOWERS</string>
 
 </resources>

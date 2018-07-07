@@ -60,6 +60,7 @@ public class TimelineActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getRelativeTimeAgo();
         return true;
     }
 
@@ -87,16 +88,44 @@ public class TimelineActivity extends AppCompatActivity  {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // check request code and result code first
-
+//
+//        // check request code and result code first
+//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+//            // Extract name value from result extras
+//            String name = data.getExtras().getString("name");
+//            int code = data.getExtras().getInt("code", 0);
+//            // Toast the name to display temporarily on screen
+//            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+//        }
+        
         // Use data parameter
         Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
 
         tweets.add(0, tweet);
         tweetAdapter.notifyItemInserted(0);
         rvTweets.scrollToPosition(0);
+        Log.d("OnActivityResult", "onActivityResult finishes");
+
+
     }
+
+    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+//    public String getRelativeTimeAgo(String rawJsonDate) {
+//        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+//        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+//        sf.setLenient(true);
+//
+//        String relativeDate = "";
+//        try {
+//            long dateMillis = sf.parse(rawJsonDate).getTime();
+//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+//                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return relativeDate;
+//    }
 
     private void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
@@ -120,7 +149,7 @@ public class TimelineActivity extends AppCompatActivity  {
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
-                        // tweet.getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+//                        tweet.getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
                         tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -158,6 +187,19 @@ public class TimelineActivity extends AppCompatActivity  {
         i.putExtra("code", 400);
         startActivityForResult(i, REQUEST_CODE);
     }
+
+//    public String getRelativeTimeAgo() {
+//        try {
+//            long dateMillis = sf.parse(rawJsonDate).getTime();
+//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+//                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return relativeDate;
+//    }
+
 
 //    public void showProfileView(){
 //

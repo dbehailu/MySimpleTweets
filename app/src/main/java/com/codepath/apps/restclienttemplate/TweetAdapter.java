@@ -12,12 +12,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+
 import java.util.List;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
     Context context;
+    TextView tvRelativeTime;
+
     // pass in tweets to constructor
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
@@ -30,7 +33,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
+//        this.tvRelativeTime = (TextView) parent.findViewById(R.id.tvRelativeTime);
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
         ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
@@ -46,6 +49,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
 
+//        TextView tvRelativeTime = holder.tvRelativeTime;
+//        tvRelativeTime.setText(TwitterTimeFormats.relativeDate(tweet.getCreatedAt()));
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
     }
 
