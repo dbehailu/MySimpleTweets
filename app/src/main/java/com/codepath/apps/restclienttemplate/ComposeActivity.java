@@ -19,6 +19,7 @@ import cz.msebera.android.httpclient.Header;
 public class ComposeActivity extends AppCompatActivity {
 
     TwitterClient client;
+    View view;
     String message; // tweet
     EditText editText;
 //    String mCurrentTweetText = "";
@@ -29,16 +30,18 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         client = TwitterApp.getRestClient(this);
-        editText = (EditText) findViewById(R.id.et_simple);
+        setTitle("MySimpleTweet - Compose Tweet");
     }
 
     public void onTweet(View view) {
-        message = editText.getText().toString();
-//        message = mCurrentTweetText;
+        editText = (EditText) findViewById(R.id.et_simple);
+        message = editText.getText().toString(); // as string
+
         if (message == null || message.isEmpty()) {
             Log.w("onTweet", "invalid tweet");
             return;
         }
+
         client.sendTweet(message, new JsonHttpResponseHandler() {
 
             @Override
@@ -61,12 +64,16 @@ public class ComposeActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                finish();
+//                finish();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
-                Log.d("ComposeActivity", jsonObject.toString());
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
+//                Log.d("ComposeActivity", jsonObject.toString());
+//                throwable.printStackTrace();
+//            }
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
             }
 

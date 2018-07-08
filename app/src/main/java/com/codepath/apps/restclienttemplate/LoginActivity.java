@@ -23,6 +23,14 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
 		final SampleModelDao sampleModelDao = ((TwitterApp) getApplicationContext()).getMyDatabase().sampleModelDao();
 
+//		AsyncTask<SampleModel, Void, Void> task = new AsyncTask<SampleModel, Void, Void>() {
+//			@Override
+//			protected Void doInBackground(SampleModel... sampleModels) {
+//				sampleModelDao.insertModel(sampleModels);
+//				return null;
+//			};
+//		};
+
 		AsyncTask<SampleModel, Void, Void> task = new AsyncTask<SampleModel, Void, Void>() {
 			@Override
 			protected Void doInBackground(SampleModel... sampleModels) {
@@ -30,7 +38,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 				return null;
 			};
 		};
+
 		task.execute(sampleModel);
+		setTitle("MySimpleTwitter");
 	}
 
 

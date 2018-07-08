@@ -2,7 +2,6 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -25,14 +25,13 @@ import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity  {
 
-    final int REQUEST_CODE = 20;
     TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     Button button;
-    private SmartFragmentStatePagerAdapter adapterViewPager;
-    private ViewPager vpPager;
+//    private SmartFragmentStatePagerAdapter adapterViewPager;
+//    private ViewPager vpPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,7 @@ public class TimelineActivity extends AppCompatActivity  {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         //set the adapter
         rvTweets.setAdapter(tweetAdapter);
-
+        setTitle("MySimpleTweets");
         populateTimeline();
     }
 
@@ -60,7 +59,6 @@ public class TimelineActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-//        getRelativeTimeAgo();
         return true;
     }
 
@@ -79,53 +77,24 @@ public class TimelineActivity extends AppCompatActivity  {
         }
     }
 
+    final int REQUEST_CODE = 20;
     public void composeMessage(){
         Toast.makeText(this, "COMPOSING MESSAGE", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+        Intent i = new Intent(this, ComposeActivity.class);
         i.putExtra("tweetText", 2);
         startActivityForResult(i, REQUEST_CODE);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        // check request code and result code first
-//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-//            // Extract name value from result extras
-//            String name = data.getExtras().getString("name");
-//            int code = data.getExtras().getInt("code", 0);
-//            // Toast the name to display temporarily on screen
-//            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
-//        }
-        
-        // Use data parameter
-        Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
-
-        tweets.add(0, tweet);
-        tweetAdapter.notifyItemInserted(0);
-        rvTweets.scrollToPosition(0);
-        Log.d("OnActivityResult", "onActivityResult finishes");
-
-
+    public void onComposeAction(MenuItem item) {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(this, ComposeActivity.class);
+        // put "extras" into the bundle for access in the second activity
+        i.putExtra("username", "foobar");
+        i.putExtra("in_reply_to", "george");
+        i.putExtra("code", 400);
+        startActivityForResult(i, REQUEST_CODE); // brings up the second activity
+//        startActivityForResult(i, REQUEST_CODE);
     }
-
-    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
-//    public String getRelativeTimeAgo(String rawJsonDate) {
-//        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-//        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-//        sf.setLenient(true);
-//
-//        String relativeDate = "";
-//        try {
-//            long dateMillis = sf.parse(rawJsonDate).getTime();
-//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-//                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return relativeDate;
-//    }
 
     private void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
@@ -143,13 +112,10 @@ public class TimelineActivity extends AppCompatActivity  {
                 for (int i = 0; i < response.length(); i++) {
                     // convert each object to a Tweet model
                     // add that Tweet model to our data source
-
-
                     // notify adapter that we've added an item
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
-//                        tweet.getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
                         tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -177,18 +143,50 @@ public class TimelineActivity extends AppCompatActivity  {
         });
     }
 
-    public void onComposeAction(MenuItem item) {
-        // first parameter is the context, second is the class of the activity to launch
-        Intent i = new Intent(this, ComposeActivity.class);
-        startActivity(i); // brings up the second activity
-        // put "extras" into the bundle for access in the second activity
-        i.putExtra("username", "foobar");
-        i.putExtra("in_reply_to", "george");
-        i.putExtra("code", 400);
-        startActivityForResult(i, REQUEST_CODE);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // check request code and result code first
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String name = data.getExtras().getString("name");
+            int code = data.getExtras().getInt("code", 0);
+            // Toast the name to display temporarily on screen
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+
+            // Use data parameter
+            // Tweet tweet = (Tweet) data.getSerializableExtra("tweet");
+
+            // Make sure the key here matches the one specified in the result passed from ActivityTwo.java
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+
+            tweets.add(0, tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+            Log.d("OnActivityResult", "onActivityResult finishes");
+        }
     }
 
 //    public String getRelativeTimeAgo() {
+//        try {
+//            long dateMillis = sf.parse(rawJsonDate).getTime();
+//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+//                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return relativeDate;
+//    }
+
+    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+//    public String getRelativeTimeAgo(String rawJsonDate) {
+//        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+//        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+//        sf.setLenient(true);
+//
+//        String relativeDate = "";
 //        try {
 //            long dateMillis = sf.parse(rawJsonDate).getTime();
 //            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
