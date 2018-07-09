@@ -62,28 +62,7 @@ public class TimelineActivity extends AppCompatActivity  {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.item1:
-                composeMessage();
-                return true;
-//            case R.id.miProfile:
-//                showProfileView();
-//                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     final int REQUEST_CODE = 20;
-    public void composeMessage(){
-        Toast.makeText(this, "COMPOSING MESSAGE", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(this, ComposeActivity.class);
-        i.putExtra("tweetText", 2);
-        startActivityForResult(i, REQUEST_CODE);
-    }
 
     public void onComposeAction(MenuItem item) {
         // first parameter is the context, second is the class of the activity to launch
@@ -93,7 +72,6 @@ public class TimelineActivity extends AppCompatActivity  {
         i.putExtra("in_reply_to", "george");
         i.putExtra("code", 400);
         startActivityForResult(i, REQUEST_CODE); // brings up the second activity
-//        startActivityForResult(i, REQUEST_CODE);
     }
 
     private void populateTimeline() {
@@ -167,6 +145,29 @@ public class TimelineActivity extends AppCompatActivity  {
             Log.d("OnActivityResult", "onActivityResult finishes");
         }
     }
+
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle presses on the action bar items
+//        switch (item.getItemId()) {
+//            case R.id.item1:
+//                composeMessage();
+//                return true;
+////            case R.id.miProfile:
+////                showProfileView();
+////                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
+
+    //    public void composeMessage(){
+//        Toast.makeText(this, "COMPOSING MESSAGE", Toast.LENGTH_SHORT).show();
+//        Intent i = new Intent(this, ComposeActivity.class);
+//        i.putExtra("tweetText", 2);
+//        startActivityForResult(i, REQUEST_CODE); // brings up the second activity
+//    }
 
 //    public String getRelativeTimeAgo() {
 //        try {

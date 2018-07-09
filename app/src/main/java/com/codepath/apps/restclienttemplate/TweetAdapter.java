@@ -19,12 +19,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     private List<Tweet> mTweets;
     Context context;
-    TextView tvRelativeTime;
 
     // pass in tweets to constructor
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
-
     }
     //for each row inflate the layout and cache references into ViewHolder
 
@@ -48,6 +46,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         // populate views according to data
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
+        holder.tvTime.setText(tweet.time);
 
 //        TextView tvRelativeTime = holder.tvRelativeTime;
 //        tvRelativeTime.setText(TwitterTimeFormats.relativeDate(tweet.getCreatedAt()));
@@ -56,6 +55,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
+
         return mTweets.size();
     }
 
@@ -64,6 +64,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
+        public TextView tvTime;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +74,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
+            tvTime = itemView.findViewById(R.id.tvTime);
 
         }
     }
